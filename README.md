@@ -5,10 +5,11 @@ AngularJS module for Built.io Contentstack - Content Delivery API
 
 **Setup** 
 
-[Download](http://www.built.io) the AngularJS SDK and include it in the script tag.
+[Download](http://www.built.io) the AngularJS SDK,JS SDK and include it in the script tag.
 
 ```xml
-<script type="text/javascript" charset="utf-8" src="js/angular-contentstack.min.js"></script>
+<script type="text/javascript" src="js/contentstack.js"></script>
+<script type="text/javascript" src="js/angular-contentstack.min.js"></script>
 ```
 
 Then add the `contentstack` module to the dependencies of your AngularJS application module and configure it in a config block using the `stackProvider`:
@@ -108,4 +109,66 @@ The contentstack service can be injected as follows:
            // err object
         })
     });
+# Helper 
+## pagination
 
+ This is a Pagination helper, using this you can achieve basic pagination functionality.This helper will provide you variable and methods for pagination such as   
+
+**Pagination Variable**
+* **$pagination.currentPage**- gives current page number
+* **$pagination.totalPages**- gives total number of pages
+* **$pagination.totalCount**- gives total number of entries
+* **$pagination.itemsPerPage**- gives count of entries per page
+
+**Pagination methods**
+* **$pagination.previous()**- call this method to get pervious page
+* **$pagination.next()**- call this method to get next page
+
+**Example Code:**
+``` sh
+<button data-ng-disabled ="$pagination.currentPage === 1" data-ng-if="entry" data-ng-click="$pagination.previous()">Previous</button>
+<button data-ng-disabled="$pagination.currentPage === $pagination.totalPages" data-ng-if="entry" data-ng-click="!isLoading && $pagination.next()">Next</button>
+<span data-ng-if="entry">Current Page {{$pagination.currentPage}}</span>
+<span data-ng-if="entry">Total Pages {{$pagination.totalPages}}</span>
+<span data-ng-if="entry">Total Count {{$pagination.totalCount}}</span>
+      		
+<contentstack-entry content-type="news" as="entry" pagination="true" limit="3" >
+  	<div data-ng-if="!$isLoading"   data-ng-repeat="key in entry" >
+  		<header>
+  		  <h1 data-ng-bind="key.title"></h1>
+  		</header>
+  		<div>
+  		  <div data-ng-bind-html="key.body"></div>
+  		</div>
+  	</div>
+  	<div class="loader" data-ng-if="entry && $isLoading">Loading...</div>
+</contentstack-entry>
+```
+## Loadmore
+
+This is a loadmore helper, using this you can achieve basic Loadmore functionality.
+
+* **$pagination.loadMore()**- call this method to load more entries.
+* **$noMoreData**- This variable is set to true when there no more entires. 
+
+**Example Code:**
+``` sh
+<contentstack-entry content-type="news" as="entry" load-more="true" limit="3" >
+  	<div data-ng-repeat="key in entry" >
+  		<header>
+  		  <h1 data-ng-bind="key.title"></h1>
+  		</header>
+  		<div>
+  		  <div data-ng-bind-html="key.body"></div>
+  		</div>
+  	</div>
+  	<div data-ng-if="entry && $isLoading">Loading...</div>
+  	<div data-ng-if="!$isLoading && $noMoreData">NO MORE DATA</div>
+    <button data-ng-if="!$isLoading"data-ng-click="$pagination.loadMore()">loadMore</button>
+</contentstack-entry
+``` 
+
+# DEMO
+* [Pagination Example](https://plnkr.co/edit/lYz3UoUrM9Z1tCaA7jPM?p=preview)
+* [Loadmore Example](https://plnkr.co/edit/Mv1ps3L0OUuTe5by6voO?p=preview)
+* [Ionic Example](https://harshalpatel91.github.io/Ionic_using_Ng-contentsatck/#/app/overview)
