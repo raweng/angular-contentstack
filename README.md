@@ -109,12 +109,12 @@ The contentstack service can be injected as follows:
            // err object
         })
     });
-# Helper 
-## pagination
 
- This is a Pagination helper, using this you can achieve basic pagination functionality.This helper will provide you variable and methods for pagination such as   
+# Pagination 
 
-**Pagination Variable**
+The pagination helper can be used to paginate contentstack entries. Lets take a look at the variables and functions it provides -
+
+**Pagination Variables**
 * **$pagination.currentPage**- gives current page number
 * **$pagination.totalPages**- gives total number of pages
 * **$pagination.totalCount**- gives total number of entries
