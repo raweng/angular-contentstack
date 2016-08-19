@@ -127,21 +127,21 @@ The contentstack service can be injected as follows:
 **Example Code:**
 ``` sh
 <button data-ng-disabled ="$pagination.currentPage === 1" data-ng-if="entry" data-ng-click="$pagination.previous()">Previous</button>
-<button data-ng-disabled="$pagination.currentPage === $pagination.totalPages" data-ng-if="entry" data-ng-click="!isLoading && $pagination.next()">Next</button>
-<span data-ng-if="entry">Current Page {{$pagination.currentPage}}</span>
-<span data-ng-if="entry">Total Pages {{$pagination.totalPages}}</span>
-<span data-ng-if="entry">Total Count {{$pagination.totalCount}}</span>
+<button data-ng-disabled="$pagination.currentPage === $pagination.totalPages" data-ng-if="entries" data-ng-click="!isLoading && $pagination.next()">Next</button>
+<span data-ng-if="entries">Current Page {{$pagination.currentPage}}</span>
+<span data-ng-if="entries">Total Pages {{$pagination.totalPages}}</span>
+<span data-ng-if="entries">Total Count {{$pagination.totalCount}}</span>
       		
-<contentstack-entry content-type="news" as="entry" pagination="true" limit="3" >
-  	<div data-ng-if="!$isLoading"   data-ng-repeat="key in entry" >
+<contentstack-entry content-type="news" as="entries" limit="3" >
+  	<div data-ng-if="!$isLoading"   data-ng-repeat="entry in entries" >
   		<header>
-  		  <h1 data-ng-bind="key.title"></h1>
+  		  <h1 data-ng-bind="entry.title"></h1>
   		</header>
   		<div>
-  		  <div data-ng-bind-html="key.body"></div>
+  		  <div data-ng-bind-html="entry.body"></div>
   		</div>
   	</div>
-  	<div class="loader" data-ng-if="entry && $isLoading">Loading...</div>
+  	<div class="loader" data-ng-if="entries && $isLoading">Loading...</div>
 </contentstack-entry>
 ```
 ## Loadmore
@@ -153,19 +153,19 @@ This is a loadmore helper, using this you can achieve basic Loadmore functionali
 
 **Example Code:**
 ``` sh
-<contentstack-entry content-type="news" as="entry" load-more="true" limit="3" >
-  	<div data-ng-repeat="key in entry" >
+<contentstack-entry content-type="news" as="entries" limit="3" >
+  	<div data-ng-repeat="entry in entries" >
   		<header>
-  		  <h1 data-ng-bind="key.title"></h1>
+  		  <h1 data-ng-bind="entry.title"></h1>
   		</header>
   		<div>
-  		  <div data-ng-bind-html="key.body"></div>
+  		  <div data-ng-bind-html="entry.body"></div>
   		</div>
   	</div>
-  	<div data-ng-if="entry && $isLoading">Loading...</div>
+  	<div data-ng-if="entries && $isLoading">Loading...</div>
   	<div data-ng-if="!$isLoading && $noMoreData">NO MORE DATA</div>
     <button data-ng-if="!$isLoading"data-ng-click="$pagination.loadMore()">loadMore</button>
-</contentstack-entry
+</contentstack-entry>
 ``` 
 
 # DEMO
