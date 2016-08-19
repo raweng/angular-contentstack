@@ -159,8 +159,8 @@ The pagination helper can be used to paginate contentstack entries. Lets take a 
   		</div>
   	</div>
   	<div data-ng-if="entries && $isLoading">Loading...</div>
-  	<div data-ng-if="!$isLoading && $noMoreData">NO MORE DATA</div>
-    <button data-ng-if="!$isLoading"data-ng-click="$pagination.loadMore()">loadMore</button>
+  	<div data-ng-if="!$isLoading && && ($pagination.currentPage !== $pagination.totalPages)">NO MORE DATA</div>
+    <button data-ng-if="!$isLoading && ($pagination.currentPage !== $pagination.totalPages)" data-ng-click="$pagination.loadMore()">loadMore</button>
 </contentstack-entry>
 ``` 
 
