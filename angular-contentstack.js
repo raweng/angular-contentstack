@@ -298,10 +298,8 @@
                       getQuery(queyAttr);
                     }
                 }
-                if(attrs.pagination && !attrs.includeCount){
                   attrs.includeCount = true;
                   entry.includeCount();
-                };
               if (scope.all || attrs.uid) {
                   as = attrs.as || '$contentstackEntries';
                   if (attrs.uid) {
@@ -325,16 +323,13 @@
                       .spread(function success(entries, schema, count) {
                            scope.$isLoading = false;
                            scope[as] = entries || {};
-                           var scopeAs = "scope."+as;
                            if(attrs.includeCount){
                              scope.count = attrs.includeSchema ? count :schema;
                            }
                            if (attrs.includeSchema) {
                                scope['schema'] = schema;
                            }
-                           if(!attrs.loadMore && attrs.pagination){
-                             updatePaginationValues();
-                           }
+                           updatePaginationValues();
                            scope.$apply();
                        }, function error(err) {
                           console.error("error",err);
@@ -355,15 +350,12 @@
                            if (attrs.includeSchema){
                                scope.schema = schema;
                            }
-                           if(!attrs.loadMore && attrs.pagination){
-                             updatePaginationValues();
-                           }
+                           updatePaginationValues();
                            scope.$apply();
                        }, function error(err) {
                           console.error("error",err);
                        });
               }
-              if(attrs.loadMore && !attrs.pagination){
                 scope.loadMoreNumber = 0;
                 scope.$noMoreData = false;
                 scope.$pagination.loadMore = function(){
@@ -392,15 +384,12 @@
                       console.error("error",err);
                    });
                 }
-              }
               var updatePaginationValues = function(){
                 scope.$pagination.totalCount = scope.count;
                 scope.$pagination.totalPages =  Math.ceil(scope.$pagination.totalCount/attrs.limit);
                 scope.$pagination.itemsPerPage = attrs.limit;
               };
-              if(!attrs.loadMore && attrs.pagination){
                 scope.$pagination.currentPage = 1;
-                scope.$noMoreData = false;
                 var newEntries = function(skipEntries){
                     entry.skip(skipEntries);
                     entry
@@ -446,7 +435,6 @@
                   var skipEntries = (scope.$pagination.currentPage-1)*Number(attrs.limit);
                   newEntries(skipEntries);
                 };
-              }
             }
 
         }])
