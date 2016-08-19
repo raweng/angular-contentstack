@@ -106,7 +106,6 @@
                     entry = ContentType.Query(),
                     as;
                 scope.$isLoading = true;
-                scope.$noMoreData = false;
                 scope.$pagination = {};
                 var getQuery = function(attr){
                     var query = {
@@ -357,8 +356,10 @@
                        });
               }
                 scope.loadMoreNumber = 0;
-                scope.$noMoreData = false;
                 scope.$pagination.loadMore = function(){
+                  if(scope.$pagination.currentPage === scope.$pagination.totalPages){
+                    return;
+                  }
                   scope.$isLoading = true;
                   scope.loadMoreNumber++;
                   var skipEntries = scope.loadMoreNumber*Number(attrs.limit);
@@ -368,8 +369,8 @@
                   .find()
                   .spread(function success(entries, schema, count) {
                        scope.$isLoading = false;
-                       if(!entries.length){
-                         scope.$noMoreData = true;
+                       if(entries.length){
+                         scope.$pagination.currentPage++;
                        }
                        var concatData = scope[as].concat(entries);
                        scope[as] = concatData || [];
@@ -397,8 +398,8 @@
                     .find()
                     .spread(function success(entries, schema, count) {
                          scope.$isLoading = false;
-                         if(!entries.length){
-                           scope.$noMoreData = true;
+                         if(entries.length){
+                            scope.$pagination.currentPage++;
                          }
                          scope[as] = entries;
                          if(attrs.includeCount){
@@ -420,16 +421,12 @@
                   scope.$isLoading = true;
                   var skipEntries = scope.$pagination.currentPage*Number(attrs.limit);
                   newEntries(skipEntries);
-                  if(!scope.$noMoreData){
-                      scope.$pagination.currentPage++;
-                  }
                 };
                 scope.$pagination.previous = function(){
                   if(scope.$pagination.currentPage <= 1){
                     return;
                   }
                   scope.$isLoading = true;
-                  scope.$noMoreData = false;
                   scope.$pagination.isLoading = true;
                   scope.$pagination.currentPage--;
                   var skipEntries = (scope.$pagination.currentPage-1)*Number(attrs.limit);
