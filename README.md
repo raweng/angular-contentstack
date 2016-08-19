@@ -120,11 +120,12 @@ The contentstack service can be injected as follows:
 * **$pagination.totalCount**- gives total number of entries
 * **$pagination.itemsPerPage**- gives count of entries per page
 
-**Pagination methods**
-* **$pagination.previous()**- call this method to get pervious page
-* **$pagination.next()**- call this method to get next page
+**Pagination Methods**
+* **$pagination.previous()**- returns pervious page entries and replaces the DOM with the new page entries
+* **$pagination.next()**- returns next page entries and replaces the DOM with new page entries
+* **$pagination.loadMore()**- load next page entries and appends new entries in DOM. Use this for infinite scrolling.
 
-**Example Code:**
+**Example (Next/Previous Pagination):**
 ``` sh
 <button data-ng-disabled ="$pagination.currentPage === 1" data-ng-if="entry" data-ng-click="$pagination.previous()">Previous</button>
 <button data-ng-disabled="$pagination.currentPage === $pagination.totalPages" data-ng-if="entries" data-ng-click="!isLoading && $pagination.next()">Next</button>
@@ -144,14 +145,9 @@ The contentstack service can be injected as follows:
   	<div class="loader" data-ng-if="entries && $isLoading">Loading...</div>
 </contentstack-entry>
 ```
-## Loadmore
 
-This is a loadmore helper, using this you can achieve basic Loadmore functionality.
+**Example (Load More):**
 
-* **$pagination.loadMore()**- call this method to load more entries.
-* **$noMoreData**- This variable is set to true when there no more entires. 
-
-**Example Code:**
 ``` sh
 <contentstack-entry content-type="news" as="entries" limit="3" >
   	<div data-ng-repeat="entry in entries" >
@@ -169,6 +165,6 @@ This is a loadmore helper, using this you can achieve basic Loadmore functionali
 ``` 
 
 # DEMO
-* [Pagination Example](https://plnkr.co/edit/lYz3UoUrM9Z1tCaA7jPM?p=preview)
-* [Loadmore Example](https://plnkr.co/edit/Mv1ps3L0OUuTe5by6voO?p=preview)
-* [Ionic Example](https://harshalpatel91.github.io/Ionic_using_Ng-contentsatck/#/app/overview)
+* [News App Example with Next/Previous Pagination](https://plnkr.co/edit/lYz3UoUrM9Z1tCaA7jPM?p=preview)
+* [News App Example with Infinite Scroll (load more)](https://plnkr.co/edit/Mv1ps3L0OUuTe5by6voO?p=preview)
+* [Sample Ionic App](https://harshalpatel91.github.io/Ionic_using_Ng-contentsatck/#/app/overview)
