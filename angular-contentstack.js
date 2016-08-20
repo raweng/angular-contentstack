@@ -398,9 +398,6 @@
                     .find()
                     .spread(function success(entries, schema, count) {
                          scope.$isLoading = false;
-                         if(entries.length){
-                            scope.$pagination.currentPage++;
-                         }
                          scope[as] = entries;
                          if(attrs.includeCount){
                            scope.$pagination.totalCount = attrs.includeSchema ? count :schema;
@@ -421,6 +418,7 @@
                   scope.$isLoading = true;
                   var skipEntries = scope.$pagination.currentPage*Number(attrs.limit);
                   newEntries(skipEntries);
+                  scope.$pagination.currentPage++;
                 };
                 scope.$pagination.previous = function(){
                   if(scope.$pagination.currentPage <= 1){
