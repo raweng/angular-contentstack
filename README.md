@@ -5,7 +5,7 @@ AngularJS module for Built.io Contentstack - Content Delivery API
 
 **Setup** 
 
-[Download](http://www.built.io) the AngularJS SDK,JS SDK and include it in the script tag.
+[Download](http://www.built.io) the Contentstack AngularJS and JS SDK. Include it in the script tag.
 
 ```xml
 <script type="text/javascript" src="js/contentstack.js"></script>
