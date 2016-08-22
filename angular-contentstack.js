@@ -128,7 +128,6 @@
                       'descending':descending,
                       'limit':limit,
                       'skip':skip,
-                      'includeReference':includeReference,
                       'exists':exists,
                       'where':where,
                       'notEqualTo':notEqualTo,
@@ -229,9 +228,6 @@
                     };
                     function beforeUid() {
                       entry.beforeUid(attrs.beforeUid);
-                    };
-                    function includeReference() {
-                      entry.includeReference(attrs.includeReference);
                     };
                     function includeCount() {
                       entry.includeCount();
