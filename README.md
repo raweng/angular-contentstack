@@ -1,9 +1,9 @@
-# angular-contentstack 
+# angular-contentstack
 AngularJS module for Built.io Contentstack - Content Delivery API
 
 ## Usage
 
-**Setup** 
+**Setup**
 
 [Download](http://www.built.io) the Contentstack AngularJS and JS SDK. Include it in the script tag.
 
@@ -15,7 +15,7 @@ AngularJS module for Built.io Contentstack - Content Delivery API
 Then add the `contentstack` module to the dependencies of your AngularJS application module and configure it in a config block using the `stackProvider`:
 
 **Configuration**
-### 
+###
 ```javascript
 angular.module('app', ['contentstack']);
 ```
@@ -35,7 +35,7 @@ angular
 	]);
 ```
 
-Once stackProvider configuration is done, you can use directives and services. 
+Once stackProvider configuration is done, you can use directives and services.
 
 ## contentstack-entry directive
 Retrive all the entires or a single entry of a Content Type.
@@ -51,9 +51,7 @@ Retrive all the entires or a single entry of a Content Type.
   <contentstack-entry content-type="blog" as="entries">
     <!--Your will get "entires" array of entry objects -->
     <ul>
-    <ng-repeat entry in entries>
-        <li>{{entry.title}}</li>
-    </ng-repeat>
+     <li data-ng-repeat="entry in entries">{{entry.title}}</li>
     </ul>
   </contentstack-entry>
 ```
@@ -110,7 +108,7 @@ The contentstack service can be injected as follows:
         })
     });
 
-# Pagination 
+# Pagination
 
 The pagination helper can be used to paginate contentstack entries. Lets take a look at the variables and functions it provides -
 
@@ -132,7 +130,7 @@ The pagination helper can be used to paginate contentstack entries. Lets take a 
 <span data-ng-if="entries">Current Page {{$pagination.currentPage}}</span>
 <span data-ng-if="entries">Total Pages {{$pagination.totalPages}}</span>
 <span data-ng-if="entries">Total Count {{$pagination.totalCount}}</span>
-      		
+
 <contentstack-entry content-type="news" as="entries" limit="3" >
   	<div data-ng-if="!$isLoading"   data-ng-repeat="entry in entries" >
   		<header>
@@ -162,7 +160,7 @@ The pagination helper can be used to paginate contentstack entries. Lets take a 
   	<div data-ng-if="!$isLoading && && ($pagination.currentPage !== $pagination.totalPages)">NO MORE DATA</div>
     <button data-ng-if="!$isLoading && ($pagination.currentPage !== $pagination.totalPages)" data-ng-click="$pagination.loadMore()">loadMore</button>
 </contentstack-entry>
-``` 
+```
 
 # DEMO
 * [News App Example with Next/Previous Pagination](https://plnkr.co/edit/lYz3UoUrM9Z1tCaA7jPM?p=preview)
