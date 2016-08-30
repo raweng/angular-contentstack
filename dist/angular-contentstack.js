@@ -1,3 +1,9 @@
+/*!
+ * angular-Contentstack - v0.0.1 - 2016-08-30
+ * https://contentstack.io
+ * Copyright (c) 2016 raweng;
+ * Licensed
+ */
 (function() {
 
   'use strict';
@@ -15,6 +21,12 @@
 
 })();
 
+/*!
+ * angular-Contentstack - v0.0.1 - 2016-08-30
+ * https://contentstack.io
+ * Copyright (c) 2016 raweng;
+ * Licensed
+ */
 (function () {
   'use strict';
   /**
@@ -58,6 +70,12 @@
 
 })();
 
+/*!
+ * angular-Contentstack - v0.0.1 - 2016-08-30
+ * https://contentstack.io
+ * Copyright (c) 2016 raweng;
+ * Licensed
+ */
 (function () {
   'use strict';
 
@@ -429,6 +447,12 @@
 
 })();
 
+/*!
+ * angular-Contentstack - v0.0.1 - 2016-08-30
+ * https://contentstack.io
+ * Copyright (c) 2016 raweng;
+ * Licensed
+ */
 (function () {
   'use strict';
   /**

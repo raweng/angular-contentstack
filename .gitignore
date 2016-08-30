@@ -4,3 +4,6 @@
 # Ignore node stuff
 node_modules/
 npm-debug.log
+
+# Bower components
+bower_components/

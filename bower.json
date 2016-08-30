@@ -1,0 +1,26 @@
+{
+  "name": "angular-contentstack",
+  "version": "0.0.1",
+  "authors": "raweng",
+  "keywords": [
+    "angular",
+    "angularjs",
+    "cms",
+    "contentstack",
+    "contentstack delivery api"
+  ],
+  "main": ["dist/angular-contentstack.js"],
+  "ignore": [
+    "src",
+    "test",
+    "gulpfile.js",
+    "karma-src.conf.js",
+    "**/.*"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "angular-mocks": ">=1.2.0 <1.5.0",
+    "angular-scenario": ">=1.2.0 <1.5.0",
+    "angular": ">=1.2.0 <1.5.0"
+  }
+}
