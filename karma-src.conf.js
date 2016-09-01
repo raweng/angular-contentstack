@@ -17,12 +17,14 @@ module.exports = function(config) {
     ],
 
     files: [
+      'src/contentstack.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'src/*.module.js',
       'src/*.provider.js',
       'src/*.directives.js',
       'src/*.factory.js',
+      'test/*.test.js',
       'test/*.js'
     ],
 
