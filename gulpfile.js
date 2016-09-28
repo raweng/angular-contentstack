@@ -14,7 +14,7 @@
       pkg = require('./package.json'),
       jshint = require('gulp-jshint'),
       karma = require('karma').server,
-      sourceFiles = ['src/*.module.js','src/*.provider.js','src/*.directives.js','src/*.factory.js'],
+      sourceFiles = ['src/*.sdk.js','src/*.module.js','src/*.provider.js','src/*.directives.js','src/*.factory.js'],
       banner = ['/*!',
                 ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %> - <%= date %>',
                 ' * <%= pkg.homepage %>',
@@ -46,8 +46,12 @@
       .pipe(gulp.dest('./dist'))
   });
 
+  // gulp.task('build', function(done) {
+  //   runSequence('jshintSrc', 'clean', 'makeSourceFiles', done)
+  // });
+
   gulp.task('build', function(done) {
-    runSequence('jshintSrc', 'clean', 'makeSourceFiles', done)
+    runSequence('clean', 'makeSourceFiles', done)
   });
 
   gulp.task('watchTask', function (done) {

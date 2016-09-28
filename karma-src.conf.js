@@ -17,7 +17,7 @@ module.exports = function(config) {
     ],
 
     files: [
-      'src/contentstack.js',
+      'src/contentstack.sdk.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'src/*.module.js',
