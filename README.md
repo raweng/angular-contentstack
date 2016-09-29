@@ -58,7 +58,7 @@ Note: If "as" attribute is not provided then by default the entries are availabl
 
 ##### Get a single Entry using entry ID :
 ```xml
-  <contentstack-entry content-type="news" entry-uid="blt12345678910" as="entry">
+  <contentstack-entry content-type="news" uid="blt12345678910" as="entry">
     <!--Your will get "entry" object -->
     <h1>{{entry.title}}</h1>
   </contentstack-entry>
