@@ -1,5 +1,5 @@
 /*!
- * angular-Contentstack - v0.0.1 - 2016-09-28
+ * angular-Contentstack - v0.0.1 - 2016-09-30
  * https://contentstack.io
  * Copyright (c) 2016 raweng;
  * Licensed
@@ -4330,7 +4330,7 @@
 /******/ ]);
 
 /*!
- * angular-Contentstack - v0.0.1 - 2016-09-28
+ * angular-Contentstack - v0.0.1 - 2016-09-30
  * https://contentstack.io
  * Copyright (c) 2016 raweng;
  * Licensed
@@ -4353,7 +4353,7 @@
 })();
 
 /*!
- * angular-Contentstack - v0.0.1 - 2016-09-28
+ * angular-Contentstack - v0.0.1 - 2016-09-30
  * https://contentstack.io
  * Copyright (c) 2016 raweng;
  * Licensed
@@ -4402,7 +4402,7 @@
 })();
 
 /*!
- * angular-Contentstack - v0.0.1 - 2016-09-28
+ * angular-Contentstack - v0.0.1 - 2016-09-30
  * https://contentstack.io
  * Copyright (c) 2016 raweng;
  * Licensed
@@ -4640,15 +4640,18 @@
                 getQuery(queyAttr);
               }
           }
+          if(!attrs.uid){
             attrs.includeCount = true;
             entry.includeCount();
+          }
+            
         if (scope.all || attrs.uid) {
             as = attrs.as || '$contentstackEntries';
             if (attrs.uid) {
                 entry
                 .toJSON()
                 .fetch()
-                .spread(function success(entries, schema) {
+                .then(function success(entries, schema) {
                      scope.$isLoading = false;
                      scope[as] = entries || {};
                      if (attrs.includeSchema) {
@@ -4779,7 +4782,7 @@
 })();
 
 /*!
- * angular-Contentstack - v0.0.1 - 2016-09-28
+ * angular-Contentstack - v0.0.1 - 2016-09-30
  * https://contentstack.io
  * Copyright (c) 2016 raweng;
  * Licensed

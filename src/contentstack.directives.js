@@ -231,15 +231,18 @@
                 getQuery(queyAttr);
               }
           }
+          if(!attrs.uid){
             attrs.includeCount = true;
             entry.includeCount();
+          }
+            
         if (scope.all || attrs.uid) {
             as = attrs.as || '$contentstackEntries';
             if (attrs.uid) {
                 entry
                 .toJSON()
                 .fetch()
-                .spread(function success(entries, schema) {
+                .then(function success(entries, schema) {
                      scope.$isLoading = false;
                      scope[as] = entries || {};
                      if (attrs.includeSchema) {
