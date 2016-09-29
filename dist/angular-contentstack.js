@@ -4652,6 +4652,7 @@
                 .toJSON()
                 .fetch()
                 .then(function success(entries, schema) {
+                    as = attrs.as || '$contentstackEntry';
                      scope.$isLoading = false;
                      scope[as] = entries || {};
                      if (attrs.includeSchema) {
