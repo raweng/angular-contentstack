@@ -26,8 +26,8 @@ angular
 	    function($locationProvider, stackProvider) {
 	        // initialize the stack
 	        stackProvider.initialize({
-	            'api_key': 'blt599456119258816d',
-	            'access_token': 'blt2361f4c5ab53e37eab6d10ee',
+	            'api_key': 'Stack api key',
+	            'access_token': 'Stack accestoken',
 	            'environment': 'development'
 	        });
 	    }
