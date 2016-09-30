@@ -28,7 +28,7 @@ angular
 	        stackProvider.initialize({
 	            'api_key': 'Stack api key',
 	            'access_token': 'Stack accestoken',
-	            'environment': 'development'
+	            'environment': 'Your environment'
 	        });
 	    }
 	]);
