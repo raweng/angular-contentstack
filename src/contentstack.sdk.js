@@ -141,7 +141,6 @@
 	 * */
 	Stack.prototype.setPort = function (port) {
 	    if(typeof port === "number") this.config.port = port;
-	    this._environment(this.environment, this.headers.api_key, true);
 	    return this;
 	}
 
@@ -153,7 +152,6 @@
 	 * */
 	Stack.prototype.setProtocol = function (protocol) {
 	    if(typeof protocol === "string" && ~["https", "http"].indexOf(protocol)) this.config.protocol = protocol;
-	    this._environment(this.environment, this.headers.api_key, true);
 	    return this;
 	}
 
@@ -165,7 +163,6 @@
 	 * */
 	Stack.prototype.setHost = function (host) {
 	    if(typeof host === "string" && host) this.config.host = host;
-	    this._environment(this.environment, this.headers.api_key, true);
 	    return this;
 	}
 
@@ -187,7 +184,6 @@
 	                        access_token: arguments[0].access_token
 	                    };
 	                    self.environment = arguments[0].environment;
-	                    self._environment(self.environment, self.headers.api_key);
 	                    return self;
 	                } else {
 	                    console.error("Kindly provide valid object parameters.");
@@ -199,7 +195,6 @@
 	                        access_token: arguments[1]
 	                    };
 	                    self.environment = arguments[2];
-	                    self._environment(self.environment, self.headers.api_key);
 	                    return self;
 	                } else {
 	                    console.error("Kindly provide valid string parameters.");
@@ -218,31 +213,6 @@
 	 * @api protected
 	 * @ignore
 	 */
-	Stack.prototype._environment = function (env, api_key, force) {
-	    var self = this,
-	        key = api_key + '.environment.' + env;
-	    var environmentUid = self.environment_uid || cache.get(key);
-	    if (environmentUid && !force) {
-	        self.environment_uid = environmentUid;
-	    } else {
-	        Request({
-	            url: self.config.protocol + "://" + self.config.host + ':' + self.config.port + '/' + self.config.version + self.config.urls.environments + env,
-	            headers: self.headers
-	        }).then(function (data) {
-	            try {
-	                if (data && data.environment && data.environment.uid) {
-	                    cache.set(key, data.environment.uid);
-	                    self.environment_uid = data.environment.uid;
-	                }
-	            } catch (e) {
-	                console.error('Could not retrieve the environment due to %s error: ', e.message);
-	            }
-	        }).catch(function (err) {
-	            console.error('Could not retrieve the environment due to %s error: ', err.message);
-	        });
-
-	    }
-	};
 
 	/**
 	 * @method setCachePolicy
@@ -394,16 +364,10 @@
 	            url: this.config.protocol + "://" + this.config.host + ':' + this.config.port + '/' + this.config.version + this.config.urls.content_types,
 	            body: {
 	                _method: 'GET',
-	                query: {
-	                    only_last_activity: true
-	                }
+	                only_last_activity: true,
+	                environment:this.environment
 	            }
 	        };
-	    if(this.environment_uid) {
-	        query.body.query.environment_uid = this.environment_uid;
-	    } else {
-	        query.body.query.environment = this.environment;
-	    }
 	    return Request(query);
 	};
 
@@ -434,15 +398,34 @@
 	}
 
 	function Request(options) {
+	    var serialize = function(obj, prefix) {
+	      var str = [], p;
+	      for(p in obj) {
+	        if (obj.hasOwnProperty(p)) {
+	          var k = prefix ? prefix + "[" + p + "]" : p,
+	              v = obj[p];
+	          str.push((v !== null && typeof v === "object" && p !== 'query') ?
+	            serialize(v, k) :
+	            encodeURIComponent(k) + "=" + (p !== 'query' ? encodeURIComponent(v) : JSON.stringify(v)));
+	        }
+	      }
+	      return str.join("&");
+	    }
+	    
 	    var deferred = when.defer();
 	    var xhr = new HTTPRequest(),
-	        method = options.method || "GET",
+	        method = "GET",
 	        url = options.url,
 	        headers = options.headers;
 
-	    // make a request
-	    xhr.open(method, url, true);
-
+	    if(options.body && typeof options.body === 'object'){
+	        delete options.body._method;    
+	        var queryParams = serialize(options.body);
+	    }
+	    
+	    
+	    //make all calls as GET instead of POST
+	    xhr.open(method, url+'?'+queryParams, true);
 	    // set headers
 	    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 	    for (var header in headers) {
@@ -589,6 +572,7 @@
 	            delete _query.environment_uid;
 	            _query.environment = queryObject.environment;
 	        }
+	        _query.environment = queryObject.environment;
 	        return {
 	            content_type_uid: queryObject.content_type_uid,
 	            locale: _query.locale || 'en-us',
@@ -657,14 +641,12 @@
 
 	exports.sendRequest = function (queryObject) {
 	    var Request = __webpack_require__(2);
-
 	    var env_uid = queryObject.environment_uid;
 	    if (env_uid) {
 	        queryObject._query.environment_uid = env_uid;
 	    } else {
 	        queryObject._query.environment = queryObject.environment;
 	    }
-
 	    var deferred = when.defer();
 	    var self = queryObject;
 	    var continueFlag = false;
@@ -673,6 +655,17 @@
 	    var isSingle = (self.entry_uid || self.singleEntry) ? true : false;
 	    var hashQuery = utils.getHash(utils.parseQueryFromParams(self, isSingle, tojson));
 	    var spreadResult;
+	    /**
+	        for new api v3
+	    */
+	    if(queryObject && queryObject.requestParams && queryObject.requestParams.body && queryObject.requestParams.body.query){
+	        var cloneQueryObj = JSON.parse(JSON.stringify(queryObject.requestParams.body.query));
+	        if(typeof cloneQueryObj !== 'object') {
+	            cloneQueryObj = JSON.parse(cloneQueryObj);
+	        }
+	        delete queryObject.requestParams.body.query;
+	        queryObject.requestParams.body =  this.merge(queryObject.requestParams.body,cloneQueryObj);
+	    }
 
 	    var getCacheCallback = function () {
 	        return function (err, entries) {
@@ -832,7 +825,6 @@
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
 
 	// cached from whatever global is present so that test runners that stub it
@@ -843,22 +835,84 @@
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
 	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
-	  }
 	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -883,7 +937,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -900,7 +954,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -912,7 +966,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -3497,9 +3551,9 @@
 
 	module.exports = exports = {
 	    protocol: "https",
-	    host: "api.contentstack.io",
+	    host: "cdn.contentstack.io",
 	    port: 443,
-	    version: "v2",
+	    version: "v3",
 	    urls: {
 	        content_types: "/content_types/",
 	        entries: "/entries/",
@@ -3586,10 +3640,10 @@
 	 * blogEntry.only(['title','description'])
 	 * @example
 	 * <caption> .only with reference_field_uid and field uid </caption>
-	 * blogEntry.only('category','title')
+	 * blogEntry.includeReference('category').only('category','title')
 	 * @example
 	 * <caption> .only with reference_field_uid and field uids(array) </caption>
-	 * blogEntry.only('category', ['title', 'description'])
+	 * blogEntry.includeReference('category').only('category', ['title', 'description'])
 	 * @returns {Entry}
 	 */
 	Entry.prototype.only = _extend('only');
@@ -3610,10 +3664,10 @@
 	 * blogEntry.except(['title','description'])
 	 * @example
 	 * <caption> .except with reference_field_uid and field uid </caption>
-	 * blogEntry.except('category','title')
+	 * blogEntry.includeReference('category').except('category','title')
 	 * @example
 	 * <caption> .except with reference_field_uid and field uids(array) </caption>
-	 * blogEntry.except('category', ['title', 'description'])
+	 * blogEntry.includeReference('category').except('category', ['title', 'description'])
 	 * @returns {Entry} */
 	Entry.prototype.except = _extend('except');
 
@@ -3630,8 +3684,12 @@
 	 */
 	Entry.prototype.includeReference = function (val) {
 	    if (Array.isArray(val) || typeof val === "string") {
-	        this._query['include'] = this._query['include'] || [];
-	        this._query['include'] = this._query['include'].concat(val);
+	        if(arguments.length){
+	            for (var i = 0; i < arguments.length; i++) {
+	                this._query['include'] = this._query['include'] || [];
+	                this._query['include'] = this._query['include'].concat(arguments[i]);
+	            }
+	        }
 	        return this;
 	    } else {
 	        console.error("Argument should be a String or an Array.");
