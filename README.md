@@ -163,5 +163,6 @@ The pagination helper can be used to paginate contentstack entries. Lets take a 
 
 # DEMO
 * [News App Example with Next/Previous Pagination](https://plnkr.co/edit/9DwuB4b2FZkaOooi7CCO?p=preview)
-* [News App Example with Infinite Scroll (load more)](https://plnkr.co/edit/lDB8Gy9G3aupt4wCbRlo?p=preview)
-* [Sample Ionic App](https://harshalpatel91.github.io/Ionic_using_Ng-contentsatck/#/app/overview)
+* [News App Example with Infinite Scroll (load more)](https://plnkr.co/edit/lDB8Gy9G3aupt4wCbRlo?p=preview )
+<!-- * [Sample Ionic App](https://harshalpatel91.github.io/Ionic_using_Ng-contentsatck/#/app/overview)
+ -->
